@@ -451,10 +451,35 @@ section { padding: 9rem 2rem; position: relative; }
 .brand-cell {
     aspect-ratio: 1.4; border-right: 1px solid rgba(255, 234, 184, 0.12); border-bottom: 1px solid rgba(255, 234, 184, 0.12);
     display: flex; align-items: center; justify-content: center;
-    transition: background 0.4s ease, color 0.4s ease;
+    transition: background 0.4s ease;
+    color: var(--blanc-casse); position: relative; overflow: hidden; text-align: center; padding: 1.8rem;
+}
+.brand-logo {
+    max-width: 75%; max-height: 60%;
+    object-fit: contain;
+    /* Filtre crème pour cohérence visuelle "trusted by" sobre */
+    filter: brightness(0) invert(1) sepia(0.3) saturate(1.5) brightness(0.95);
+    opacity: 0.75;
+    transition: opacity 0.4s ease, filter 0.4s ease;
+}
+.brand-cell:hover .brand-logo {
+    opacity: 1;
+    filter: brightness(0) invert(1) sepia(0.5) saturate(2) brightness(1.05);
+}
+.brand-fallback {
+    display: none;
+    align-items: center;
+    justify-content: center;
     font-family: 'Mosvita', 'Big Shoulders Display', sans-serif;
-    font-weight: 900; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 0.02em;
-    color: var(--blanc-casse); position: relative; overflow: hidden; text-align: center; padding: 1rem;
+    font-weight: 900; font-size: 1.4rem; text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--blanc-casse);
+    opacity: 0.75;
+    transition: opacity 0.4s ease, color 0.4s ease;
+}
+.brand-cell:hover .brand-fallback {
+    opacity: 1;
+    color: var(--sable);
 }
 .brand-cell:hover { background: rgba(255, 234, 184, 0.05); color: var(--sable); }
 .brand-cell::after {
@@ -862,14 +887,14 @@ section { padding: 9rem 2rem; position: relative; }
             activations digitales, événements live, contenus de marque.
         </p>
         <div class="brands-grid reveal">
-            <div class="brand-cell">KFC</div>
-            <div class="brand-cell">Bonduelle</div>
-            <div class="brand-cell">Red Bull</div>
-            <div class="brand-cell">Crédit Agricole</div>
-            <div class="brand-cell">Deezer</div>
-            <div class="brand-cell">Webedia</div>
-            <div class="brand-cell">Kings League</div>
-            <div class="brand-cell">Coupe de France</div>
+            <div class="brand-cell"><img src="brands/kfc.svg" alt="KFC" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="brand-fallback">KFC</span></div>
+            <div class="brand-cell"><img src="brands/bonduelle.svg" alt="Bonduelle" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="brand-fallback">Bonduelle</span></div>
+            <div class="brand-cell"><img src="brands/red-bull.svg" alt="Red Bull" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="brand-fallback">Red Bull</span></div>
+            <div class="brand-cell"><img src="brands/credit-agricole.svg" alt="Crédit Agricole" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="brand-fallback">Crédit Agricole</span></div>
+            <div class="brand-cell"><img src="brands/deezer.svg" alt="Deezer" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="brand-fallback">Deezer</span></div>
+            <div class="brand-cell"><img src="brands/webedia.svg" alt="Webedia" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="brand-fallback">Webedia</span></div>
+            <div class="brand-cell"><img src="brands/kings-league.svg" alt="Kings League" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="brand-fallback">Kings League</span></div>
+            <div class="brand-cell"><img src="brands/coupe-de-france.svg" alt="Coupe de France" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="brand-fallback">Coupe de France</span></div>
         </div>
     </div>
 </section>
