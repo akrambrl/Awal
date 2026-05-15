@@ -733,16 +733,16 @@ section { padding: 9rem 2rem; position: relative; }
 <section class="stats">
     <div class="stats-grid">
         <div class="stat reveal">
-            <div class="stat-num">2,5M+</div>
-            <div class="stat-label">Vues sur une production</div>
+            <div class="stat-num" data-stat="total_views">2,5M+</div>
+            <div class="stat-label">Vues cumulées YouTube</div>
         </div>
         <div class="stat reveal">
             <div class="stat-num">20M+</div>
             <div class="stat-label">Audience cumulée des talents</div>
         </div>
         <div class="stat reveal">
-            <div class="stat-num">15+</div>
-            <div class="stat-label">Productions livrées</div>
+            <div class="stat-num" data-stat="video_count">15+</div>
+            <div class="stat-label">Vidéos produites</div>
         </div>
         <div class="stat reveal">
             <div class="stat-num">7</div>
@@ -1016,6 +1016,60 @@ const observer = new IntersectionObserver(entries => {
     });
 }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// =========================
+// LIVE STATS — fetch stats.json (mis à jour par GitHub Actions)
+// =========================
+function formatStatValue(n, key) {
+    if (key === 'video_count') return n + '+';
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace('.', ',') + 'M+';
+    if (n >= 1_000) return Math.round(n / 1_000) + 'K+';
+    return n.toString();
+}
+
+function animateStat(el, target, key) {
+    const duration = 1800;
+    const start = performance.now();
+    function step(now) {
+        const t = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+        const value = Math.floor(target * eased);
+        el.textContent = formatStatValue(value, key);
+        if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
+async function loadLiveStats() {
+    try {
+        // Cache busting pour avoir toujours la dernière version
+        const res = await fetch('stats.json?t=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        document.querySelectorAll('[data-stat]').forEach(el => {
+            const key = el.dataset.stat;
+            if (data[key] !== undefined && data[key] > 0) {
+                animateStat(el, data[key], key);
+            }
+        });
+    } catch (e) {
+        console.log('stats.json non chargé, valeurs par défaut conservées');
+    }
+}
+
+// Lance le chargement quand la section stats devient visible
+const statsSection = document.querySelector('.stats');
+if (statsSection) {
+    const statsObs = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                loadLiveStats();
+                obs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.25 });
+    statsObs.observe(statsSection);
+}
 </script>
 
 </body>
